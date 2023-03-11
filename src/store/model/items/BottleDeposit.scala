@@ -1,12 +1,16 @@
 package store.model.items
 
-class BottleDeposit (total: Double) extends Modifier {
+class BottleDeposit(totalPrice:Double) extends Modifier {
 
-  override def updatePrice(initialPrice: Double): Double = {
-    initialPrice
+  override def updatePrice(originPrice: Double): Double = {
+    originPrice
   }
 
-  override def computeTax(input: Double): Double = {
-    total
+  override def computeTax(price: Double): Double = {
+    totalPrice
+  }
+
+  override def percentage(): Double = {
+    totalPrice
   }
 }

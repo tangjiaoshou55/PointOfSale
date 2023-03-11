@@ -1,81 +1,65 @@
 package store.model.checkout
 
-import store.model.items.Item
+import store.model.items.{Item, LoyaltySale}
 
 class SelfCheckout {
 
-  var allProduct: Map[String, Item] = Map()
+  var state: State = new normal(this)
+  var inventory: Map[String, Item] = Map()
+  var numberStored:String = ""
+  var chart: List[Item] = List()
 
   def addItemToStore(barcode: String, item: Item): Unit = {
     // This method adds an item to your store's checkout system. It does not add an item to the customer's cart
-    allProduct += (barcode -> item)
+    this.state.addItemToStore(barcode, item)
   }
 
-  var numPressed: String = ""
-
   def numberPressed(number: Int): Unit = {
-    numPressed += number.toString
-    displayString()
+    this.state.numberPressed(number: Int)
   }
 
   def clearPressed(): Unit = {
-    numPressed = ""
-    displayString()
+    this.state.clearPressed()
   }
 
-  var chart: List[Item] = List()
-
   def enterPressed(): Unit = {
-    chart :+= allProduct.getOrElse(numPressed, new Item("error", 0.0))
-    clearPressed()
+    this.state.enterPressed()
   }
 
   def checkoutPressed(): Unit = {
-    // TODO
+    this.state.checkoutPressed()
   }
 
   def cashPressed(): Unit = {
-    // TODO
+    this.state.cashPressed()
   }
 
   def creditPressed(): Unit = {
-    // TODO
+    this.state.creditPressed()
   }
 
   def loyaltyCardPressed(): Unit = {
-    // TODO
+    this.state.loyaltyCardPressed()
   }
 
   def displayString(): String = {
-    return numPressed
+    this.state.displayString()
   }
 
   def itemsInCart(): List[Item] = {
-    return chart
+    this.state.itemsInCart()
   }
 
   def subtotal(): Double = {
-    var total: Double = 0.0
-
-    for (item <- chart){
-      total += item.price()
-    }
-
-    return total
+    this.state.subtotal()
   }
 
   def tax(): Double = {
-    var totalTax: Double = 0.0
-
-    for (item <- chart){
-      totalTax += item.tax()
-    }
-
-    return totalTax
+    this.state.tax()
   }
 
   def total(): Double = {
-    return subtotal() + tax()
+    this.state.total()
   }
 
   def prepareStore(): Unit = {
@@ -93,6 +77,12 @@ class SelfCheckout {
     // Example usage:
     //val testItem: Item = new Item("test item", 100.0)
     //this.addItemToStore("472", testItem)
-  }
 
+    val testItem: Item = new Item("x", 20.0)
+    val testItem2: Item = new Item("y", 200.0)
+    testItem.addModifier(new LoyaltySale(50))
+    testItem2.addModifier(new LoyaltySale(40))
+    this.addItemToStore("123", testItem)
+    this.addItemToStore("234", testItem2)
+  }
 }

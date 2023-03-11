@@ -2,9 +2,11 @@ package store.model.items
 
 abstract class Modifier() {
 
-  def updatePrice (initialPrice: Double): Double
+  var state: LoyaltyState = new normalState(this)
+  
+  def updatePrice(originPrice: Double): Double
 
-  def computeTax (price: Double): Double
+  def computeTax(price: Double): Double
 
-
+  def percentage(): Double
 }

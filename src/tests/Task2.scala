@@ -4,87 +4,83 @@ import store.model.checkout.SelfCheckout
 import store.model.items.{BottleDeposit, Item, Sale, SalesTax}
 import store.view.SelfCheckoutGUI
 class Task2 extends FunSuite {
-  test("item test") {
-    //    var testSelfCheckout: SelfCheckout = new SelfCheckout()
-    //
-    //    var testItem: Item = new Item("test item", 100.0)
-    //
-    //    testSelfCheckout.addItemToStore("123", testItem)
-    // TODO
-    var descriptions:List[String]=List()
-    var prices:List[Double]=List()
-    descriptions=descriptions:+"My description"
-    prices=prices:+5.99
-    descriptions=descriptions:+"Oreos"
-    prices=prices:+4.50
-    var items:List[Item]=List()
-    for (index <- descriptions.indices){
-      items=items:+new Item(descriptions(index),prices(index))
 
-      assert(items(index).description()==descriptions(index),"testing description "+
-        "explected: "+descriptions(index)+" actually got: "+items(index).description())
-      assert(Math.abs(items(index).price()-prices(index))<.0001,"testing constructor "+
-        "expected: "+prices(index)+" got: "+items(index).price())
-      items(index).setBasePrice(prices(index)-5)
-      assert(Math.abs(items(index).price()-(prices(index)-5))<.0001,"testing setBasePrice "+
-        "expected: "+(prices(index)-5)+" got: "+items(index).price())
+  test("correct Item") {
+    var descriptions: List[String] = List("items", "items2", "items3")
+    var prices: List[Double] = List(1.2, 2.2, 5.1)
+
+    descriptions = descriptions :+ "item4"
+    prices = prices :+ 5.99
+    descriptions = descriptions :+ "item5"
+    prices = prices :+ 4.50
+
+    var items: List[Item] = List()
+    for (index <- descriptions.indices) {
+      items = items :+ new Item(descriptions(index), prices(index))
+
+      assert(items(index).description() == descriptions(index), "testing description " +
+        "expected: " + descriptions(index) + " actually got: " + items(index).description())
+      assert(Math.abs(items(index).price() - prices(index)) < 0.0001, "testing setBasePrice " +
+        "expected: " + prices(index) + " got: " + items(index).price())
+
+      items(index).setBasePrice(prices(index) - 5)
+      assert(Math.abs(items(index).price() - (prices(index) - 5)) < 0.0001, "testing setBasePrice " +
+        "expected: " + (prices(index) - 5) + " got: " + items(index).price())
     }
-
   }
-  test(" normal") {
-    val checkout: SelfCheckout = new SelfCheckout
-    var testItem2: Item = new Item("orange", 10.0)
-    testItem2.addModifier(new Sale(20.0))
-    testItem2.addModifier(new SalesTax(10.0))
-    checkout.addItemToStore("125", testItem2)
-    checkout.numberPressed(1)
 
-    checkout.numberPressed(2)
-    checkout.numberPressed(5)
-    checkout.enterPressed()
-    checkout.numberPressed(1)
-    checkout.numberPressed(2)
-    checkout.numberPressed(5)
-    checkout.enterPressed()
-    assert(Math.abs(checkout.subtotal() - 16) < 0.0001)
-    assert(Math.abs(checkout.tax() - 1.6) < 0.0001)
-  }
-  test("sale twice") {
-    val checkout: SelfCheckout = new SelfCheckout
-    var testItem2: Item = new Item("orange", 10.0)
-    testItem2.addModifier(new Sale(20.0))
-    testItem2.addModifier(new Sale(10.0))
-    testItem2.addModifier(new SalesTax(10.0))
-    checkout.addItemToStore("072", testItem2)
-    checkout.numberPressed(0)
+  test("all correct"){
+    val testSelfCheckout: SelfCheckout = new SelfCheckout
+    val testItem: Item = new Item("x", 1.0)
+    testItem.addModifier(new Sale(35.7))
+    testItem.addModifier(new SalesTax(8.9))
+    testSelfCheckout.addItemToStore("472", testItem)
 
-    checkout.numberPressed(7)
-    checkout.numberPressed(2)
-    checkout.enterPressed()
-    checkout.numberPressed(0)
-    checkout.numberPressed(7)
-    checkout.numberPressed(2)
-    checkout.enterPressed()
-    assert(Math.abs(checkout.subtotal() - 14.4) < 0.0001)
-    assert(Math.abs(checkout.tax() - 1.44) < 0.00001)
+    testSelfCheckout.numberPressed(4)
+    testSelfCheckout.numberPressed(7)
+    testSelfCheckout.numberPressed(2)
+    testSelfCheckout.enterPressed()
+
+    assert(Math.abs(testSelfCheckout.subtotal() - 0.643) < 0.0001)
+    assert(Math.abs(testSelfCheckout.tax() - 0.0572) < 0.0001)
   }
+
   test(" extra_penny_bottle_deposit") {
-    val checkout: SelfCheckout = new SelfCheckout
-    var testItem2: Item = new Item("big", 10.0)
-    testItem2.addModifier(new Sale(20.0))
-    testItem2.addModifier(new SalesTax(10.0))
-    testItem2.addModifier(new BottleDeposit(10.0))
-    checkout.addItemToStore("072", testItem2)
-    checkout.numberPressed(0)
+    var testSelfCheckout: SelfCheckout = new SelfCheckout()
+    var testItem: Item = new Item("Cheese", 12.0)
+    testItem.addModifier(new Sale(40))
+    testItem.addModifier(new SalesTax(8.9))
+    testItem.addModifier(new BottleDeposit(12.0))
+    testSelfCheckout.addItemToStore("123", testItem)
 
-    checkout.numberPressed(7)
-    checkout.numberPressed(2)
-    checkout.enterPressed()
-    checkout.numberPressed(0)
-    checkout.numberPressed(7)
-    checkout.numberPressed(2)
-    checkout.enterPressed()
-    assert(Math.abs(checkout.subtotal() - 16.0) < 0.0001)
-    assert(Math.abs(checkout.tax() - 21.6) < 0.0001)
+    testSelfCheckout.numberPressed(1)
+    testSelfCheckout.numberPressed(2)
+    testSelfCheckout.numberPressed(3)
+    testSelfCheckout.enterPressed()
+    testSelfCheckout.numberPressed(1)
+    testSelfCheckout.numberPressed(2)
+    testSelfCheckout.numberPressed(3)
+    testSelfCheckout.enterPressed()
+    assert(Math.abs(testSelfCheckout.subtotal() - 14.4) < 0.0001)
+    assert(Math.abs(testSelfCheckout.tax() - 25.2816) < 0.0001)
+  }
+
+  test("twice new Sale") {
+    var testSelfCheckout: SelfCheckout = new SelfCheckout()
+    var testItem: Item = new Item("Cheese", 12.0)
+    testItem.addModifier(new Sale(40))
+    testItem.addModifier(new Sale(20))
+    testItem.addModifier(new SalesTax(8.9))
+    testItem.addModifier(new BottleDeposit(12.0))
+    testSelfCheckout.addItemToStore("123", testItem)
+
+    testSelfCheckout.numberPressed(1)
+    testSelfCheckout.numberPressed(2)
+    testSelfCheckout.numberPressed(3)
+    testSelfCheckout.enterPressed()
+
+    assert(Math.abs(testSelfCheckout.subtotal() - 5.76) < 0.0001)
+    assert(Math.abs(testSelfCheckout.tax() - 12.5126) < 0.0001)
+    assert(Math.abs(testSelfCheckout.total() - 18.2726) < 0.0001)
   }
 }
